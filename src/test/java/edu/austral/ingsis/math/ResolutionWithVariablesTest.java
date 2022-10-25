@@ -1,5 +1,12 @@
 package edu.austral.ingsis.math;
 
+import edu.austral.ingsis.math.function.Function;
+import edu.austral.ingsis.math.function.Operation;
+import edu.austral.ingsis.math.function.SelfOperation;
+import edu.austral.ingsis.math.function.Variable;
+import edu.austral.ingsis.math.operators.MultipleOperator;
+import edu.austral.ingsis.math.operators.SelfOperator;
+import edu.austral.ingsis.math.vistors.SolveVisitor;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -13,8 +20,12 @@ public class ResolutionWithVariablesTest {
      */
     @Test
     public void shouldResolveFunction1() {
-        final Double result = 4d;
+        Function op = new Operation(new Variable(1), new Variable("x",3), MultipleOperator.SUM);
 
+        SolveVisitor printVisitor = new SolveVisitor();
+        op.acceptVisitor(printVisitor);
+
+        final Double result = printVisitor.getResult();
         assertThat(result, equalTo(4d));
     }
 
@@ -23,8 +34,12 @@ public class ResolutionWithVariablesTest {
      */
     @Test
     public void shouldResolveFunction2() {
-        final Double result = 3d;
+        Function op = new Operation(new Variable(12), new Variable("div",4), MultipleOperator.DIV);
 
+        SolveVisitor printVisitor = new SolveVisitor();
+        op.acceptVisitor(printVisitor);
+
+        final Double result = printVisitor.getResult();
         assertThat(result, equalTo(3d));
     }
 
@@ -33,7 +48,13 @@ public class ResolutionWithVariablesTest {
      */
     @Test
     public void shouldResolveFunction3() {
-        final Double result = 12d;
+        Function op1 = new Operation(new Variable(9), new Variable("x",3), MultipleOperator.DIV);
+        Function op2 = new Operation(op1, new Variable("y",4), MultipleOperator.MUL);
+
+        SolveVisitor printVisitor = new SolveVisitor();
+        op2.acceptVisitor(printVisitor);
+
+        final Double result = printVisitor.getResult();
 
         assertThat(result, equalTo(12d));
     }
@@ -43,8 +64,13 @@ public class ResolutionWithVariablesTest {
      */
     @Test
     public void shouldResolveFunction4() {
-        final Double result = 27d;
+        Function op1 = new Operation(new Variable(27), new Variable("a", 9), MultipleOperator.DIV);
+        Function op2 = new Operation(op1, new Variable("b", 3), MultipleOperator.EXP);
 
+        SolveVisitor printVisitor = new SolveVisitor();
+        op2.acceptVisitor(printVisitor);
+
+        final Double result = printVisitor.getResult();
         assertThat(result, equalTo(27d));
     }
 
@@ -53,7 +79,12 @@ public class ResolutionWithVariablesTest {
      */
     @Test
     public void shouldResolveFunction5() {
-        final Double result = 6d;
+        Function op= new SelfOperation(new Variable("z",36), SelfOperator.SQR);
+
+        SolveVisitor printVisitor = new SolveVisitor();
+        op.acceptVisitor(printVisitor);
+
+        final Double result = printVisitor.getResult();
 
         assertThat(result, equalTo(6d));
     }
@@ -63,18 +94,13 @@ public class ResolutionWithVariablesTest {
      */
     @Test
     public void shouldResolveFunction6() {
-        final Double result = 0d;
+        Function op1 = new SelfOperation(new Variable("value",8),SelfOperator.ABS);
+        Function op2 = new Operation(op1, new Variable(8), MultipleOperator.SUB);
 
-        assertThat(result, equalTo(0d));
-    }
+        SolveVisitor printVisitor = new SolveVisitor();
+        op2.acceptVisitor(printVisitor);
 
-    /**
-     * Case |value| - 8 where value = 8
-     */
-    @Test
-    public void shouldResolveFunction7() {
-        final Double result = 0d;
-
+        final Double result = printVisitor.getResult();
         assertThat(result, equalTo(0d));
     }
 
@@ -83,7 +109,13 @@ public class ResolutionWithVariablesTest {
      */
     @Test
     public void shouldResolveFunction8() {
-        final Double result = 24d;
+        Function op1 = new Operation(new Variable(5), new Variable("i",2), MultipleOperator.SUB);
+        Function op2 = new Operation(op1, new Variable(8), MultipleOperator.MUL);
+
+        SolveVisitor printVisitor = new SolveVisitor();
+        op2.acceptVisitor(printVisitor);
+
+        final Double result = printVisitor.getResult();
 
         assertThat(result, equalTo(24d));
     }
