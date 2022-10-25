@@ -1,27 +1,58 @@
 @startuml
 'https://plantuml.com/class-diagram
 
-abstract class AbstractList
-abstract AbstractCollection
-interface List
-interface Collection
-
-List <|-- AbstractList
-Collection <|-- AbstractCollection
-
-Collection <|- List
-AbstractCollection <|- AbstractList
-AbstractList <|-- ArrayList
-
-class ArrayList {
-Object[] elementData
-size()
+interface Function {
+    + isComposite(): Boolean
+    + acceptVisitor(visitor: Visitor)
+}
+enum SelfOperator {
+ - SQRT
+ - ABS
+}
+enum MultipleOperator {
+    - SUM
+    - SUB
+    - MUL
+    - DIV
+    - EXP
 }
 
-enum TimeUnit {
-DAYS
-HOURS
-MINUTES
+class Operation implements Function{
+    - firstArg: Function
+    - secondArg: Function
+    - operator: Operator
+    + getFirstArg()
+    + getSecondArg()
+    + getOperator()
+    + isComposite(): True
+    + acceptVisitor(visitor: Visitor)
 }
+
+class SelfOperation implements Function {
+    - arg: Function
+    - operator: SelfOperator
+    + getArg()
+    + isComposite(): True
+    + acceptVisitor(visitor: Visitor)
+}
+class Variable implements Function{
+    + isComposite(): False
+    + acceptVisitor(visitor: Visitor)
+}
+interface Visitor {
+    + visitOperation()
+    + visitSelfOperation()
+    + visitVariable()
+}
+class PrintVisitor implements Visitor {
+}
+class SolveVisitor implements Visitor{
+}
+class ListVariablesVisitor implements Visitor{
+}
+
+MultipleOperator <-- Operation
+SelfOperator <-- SelfOperation
+Function --> Visitor
 
 @enduml
